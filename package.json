@@ -1,0 +1,35 @@
+{
+  "name": "soyagaci-parser",
+  "version": "1.0.0",
+  "description": "E-Devlet soy ağacını text, pdf ve html'den parse edebilen kütüphane.",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yengas/soyagaci-parser.git"
+  },
+  "keywords": [
+    "soyagaci",
+    "soy",
+    "ağacı",
+    "parser",
+    "e-devlet"
+  ],
+  "author": "Yengas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yengas/soyagaci-parser/issues"
+  },
+  "homepage": "https://github.com/Yengas/soyagaci-parser#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "ts-loader": "^4.0.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10"
+  }
+}
