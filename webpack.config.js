@@ -24,7 +24,7 @@ module.exports = {
     }],
   },
   target: 'node',
-  node: {
-    fs: 'empty',
-  },
+  externals: {
+    'pdfjs-dist': 'pdfjs-dist'
+  }
 };
