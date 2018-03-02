@@ -1,4 +1,5 @@
 const path = require('path');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 module.exports = {
   output: {
@@ -13,6 +14,9 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
+  plugins: [
+    new WebpackShellPlugin({ onBuildEnd: ['node dist/main.js'], dev: false })
+  ],
   module: {
     rules: [{
       test: /\.ts$/,

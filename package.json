@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "npm run build && node dist/main.js"
+    "watch": "npm run build -- --watch" 
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,8 @@
     "tslint": "^5.9.1",
     "typescript": "^2.7.2",
     "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.10"
+    "webpack-cli": "^2.0.10",
+    "webpack-shell-plugin": "^0.5.0"
   },
   "optionalDependencies": {
     "pdfjs-dist": "^2.0.402"
