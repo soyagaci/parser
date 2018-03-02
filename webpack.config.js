@@ -23,5 +23,5 @@ module.exports = {
       ]
     }],
   },
-  target: 'web'
+  target: 'node'
 };
