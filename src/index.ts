@@ -1,11 +1,13 @@
-//import pdf1 from 'pdfjs';
-declare function require(name:string);
-const pdf1 = require('pdfjs-dist');
+export {default as PDFParser} from './PDFParser';
 
-console.log(pdf1);
-
-export function PdfParser(){ return 'PDF'; }
-export function HtmlParser(){ return 'Html'; }
-export function TextParser(){ return 'Text'; }
+export function HtmlParser(data){ return []; }
+export function TextParser(data){ return []; }
 
 export default HtmlParser;
+
+// Nodejs code for testing out pdf reading...
+import PDFParser from './PDFParser';
+declare function require(name:string);
+const fs = require('fs');
+const data = new Uint8Array(fs.readFileSync('/home/yengas/Downloads/soyagaci.pdf'));
+PDFParser(data).then(console.log, console.log);

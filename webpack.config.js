@@ -23,5 +23,8 @@ module.exports = {
       ]
     }],
   },
-  target: 'node'
+  target: 'node',
+  node: {
+    fs: 'empty',
+  },
 };
