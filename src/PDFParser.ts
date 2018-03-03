@@ -12,6 +12,7 @@ function process(data: any): object {
     let tableCoordinates: object = {};
     let kinshipDict: object = {};
     let i: number = 0;
+
     // find the coordinates of the headers in format of {"header": [x1, x2], ...}
     while (i < data["items"].length) {
         if (data["items"][i]["str"] === "Sıra") {
@@ -32,6 +33,7 @@ function process(data: any): object {
         }
         i++;
     }
+
     // create the kinship dictionary
     let person: string;
     while (i < data["items"].length) {
@@ -57,20 +59,24 @@ function process(data: any): object {
         }
         i++;
     }
+
     return kinshipDict;
 }
 
 
 
-export default function PDFParser(data: Uint8Array){
-    return PDFJS.getDocument(data).then(function (doc){
-        let numPages = doc.numPages;
-        let results = {};
+export default async function PDFParser(data: Uint8Array){
+    const doc = await PDFJS.getDocument(data);
+    const numPages = doc.numPages;
+    const results = await Promise.all(
+        [ ...new Array(doc.numPages) ]
+            .map(async (_, i) => {
+                const page = await doc.getPage(i + 1);
+                const content = await page.getTextContent();
 
-        doc.getPage(0)
-            .then((page) => page.getTextContent())
-            .then((content) => process(content));
+                return process(content);
+            })
+    );
 
-        return results;
-    });
+    return [];
 };
