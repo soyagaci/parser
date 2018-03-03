@@ -1,5 +1,4 @@
 const path = require('path');
-const WebpackShellPlugin = require('webpack-shell-plugin');
 
 module.exports = {
   output: {
@@ -9,14 +8,13 @@ module.exports = {
     path: path.join(__dirname, 'dist'), // where to place webpack files
   },
   entry: {
-    main: './src/index.ts'
+    pdf: './src/PDFParser.ts',
+    html: './src/HTMLParser.ts',
+    text: './src/TextParser.ts'
   },
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  plugins: [
-    new WebpackShellPlugin({ onBuildEnd: ['node dist/main.js'], dev: false })
-  ],
   module: {
     rules: [{
       test: /\.ts$/,
@@ -29,6 +27,7 @@ module.exports = {
   },
   target: 'node',
   externals: {
-    'pdfjs-dist': 'pdfjs-dist'
+    'pdfjs-dist': 'pdfjs-dist',
+    'jsdom': 'jsdom',
   }
 };
