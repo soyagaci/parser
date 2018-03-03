@@ -4,7 +4,7 @@
   "description": "E-Devlet soy ağacını text, pdf ve html'den parse edebilen kütüphane.",
   "main": "dist/html.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "webpack",
     "watch": "npm run build -- --watch"
   },
@@ -27,8 +27,11 @@
   "homepage": "https://github.com/Yengas/soyagaci-parser#readme",
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^22.1.4",
     "@types/jsdom": "^11.0.4",
+    "@types/node": "^9.4.6",
     "@types/pdfjs-dist": "^0.1.2",
+    "jest": "^22.4.2",
     "ts-loader": "^4.0.0",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2",
@@ -38,6 +41,17 @@
   "optionalDependencies": {
     "jsdom": "^11.6.2",
     "pdfjs-dist": "^2.0.402"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts", "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/preprocessor.js"
+    },
+    "testMatch": [
+      "**/__tests__/*.spec.ts"
+    ]
   },
   "files": [
     "/dist/text.js",
