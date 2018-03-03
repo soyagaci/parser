@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "watch": "npm run build -- --watch" 
+    "watch": "npm run build -- --watch"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Yengas/soyagaci-parser#readme",
   "dependencies": {},
   "devDependencies": {
+    "@types/pdfjs-dist": "^0.1.2",
     "ts-loader": "^4.0.0",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2",
