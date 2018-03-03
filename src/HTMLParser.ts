@@ -1,4 +1,3 @@
-declare function require(name:string);
 let createElement: (str: string) => HTMLElement;
 
 // try to require dom if we are not running inside browser

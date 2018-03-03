@@ -1,4 +1,3 @@
-declare function require(name:string);
 declare var PDFJS: any;
 
 // Try to require PDFJS if its not globally defined.
