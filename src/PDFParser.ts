@@ -1,33 +1,61 @@
+import {findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, parseRecords} from "./RecordParse";
+
 declare var PDFJS: any;
 
 // Try to require PDFJS if its not globally defined.
 if(typeof PDFJS === 'undefined') PDFJS = require('pdfjs-dist');
 
-function getCoordinates(data: object, index: number, step: number): number[] {
-    // helper function for retrieving coordinates
-    return [data["items"][index - step]["transform"][4] + data["items"][index - step]["width"], data["items"][index + step]["transform"][4]];
+class ColumnWidth{
+    start: number;
+    end: number;
+    column: HeaderColumn;
 }
 
-function process(data: any): object {
-    let tableCoordinates: object = {};
+function getCoordinates(data: object, index: number, column: HeaderColumn): ColumnWidth {
+    const items = data['items'];
+    // helper function for retrieving coordinates
+    return {
+        start: items[index]["transform"][4],
+        end: items[index]["transform"][4] + items[index]["width"],
+        column
+    };
+}
+
+function checkInColumn(columns: ColumnWidth[], columnIndex: number, xStart: number, xEnd: number) : boolean {
+    const previousColumn = columns[columnIndex - 1];
+    const nextColumn = columns[columnIndex + 1];
+    const columnStart = previousColumn ? previousColumn.end : 0;
+    const columnEnd = nextColumn ? nextColumn.start : Number.MAX_VALUE;
+
+    return xStart > columnStart && xEnd < columnEnd;
+}
+
+function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
+    let tableCoordinates : ColumnWidth[] = [];
     let kinshipDict: object = {};
     let i: number = 0;
+    const items = data['items'];
 
     // find the coordinates of the headers in format of {"header": [x1, x2], ...}
-    while (i < data["items"].length) {
-        if (data["items"][i]["str"] === "Sıra") {
-            tableCoordinates["order"] = [data["items"][i]["transform"][4], data["items"][i + 1]["transform"][4]];
-            tableCoordinates["sex"] = getCoordinates(data, i + 1, 1);
-            tableCoordinates["kinship"] = getCoordinates(data, i + 2, 1);
-            tableCoordinates["name"] = getCoordinates(data, i + 3, 1);
-            tableCoordinates["surname"] = getCoordinates(data, i + 4, 1);
-            tableCoordinates["father"] = getCoordinates(data, i + 5, 1);
-            tableCoordinates["mother"] = getCoordinates(data, i + 6, 1);
-            tableCoordinates["birthPlace"] = getCoordinates(data, i + 7, 2);
-            tableCoordinates["address"] = getCoordinates(data, i + 9, 1);
-            tableCoordinates["idInfo"] = getCoordinates(data, i + 10, 2);
-            tableCoordinates["maritalStat"] = getCoordinates(data, i + 12, 2);
-            tableCoordinates["stat"] = [data["items"][i + 12]["transform"][4] + data["items"][i + 12]["width"], data["items"][i + 14]["transform"][4] + data["items"][i + 14]["width"] + data["items"][i]["width"]];
+    while (i < items.length) {
+        const item = items[i];
+
+        if (item["str"] === HeaderColumn.Order) {
+            tableCoordinates = [
+                getCoordinates(data, i, HeaderColumn.Order),
+                getCoordinates(data, i + 1, HeaderColumn.Gender),
+                getCoordinates(data, i + 2, HeaderColumn.Relation),
+                getCoordinates(data, i + 3, HeaderColumn.Name),
+                getCoordinates(data, i + 4, HeaderColumn.LastName),
+                getCoordinates(data, i + 5, HeaderColumn.FathersName),
+                getCoordinates(data, i + 6, HeaderColumn.MothersName),
+                getCoordinates(data, i + 7, HeaderColumn.BirthPlaceAndDate),
+                getCoordinates(data, i + 9, HeaderColumn.BirthAddress),
+                getCoordinates(data, i + 10, HeaderColumn.CitHaneSiraNo),
+                getCoordinates(data, i + 12, HeaderColumn.MarriageStatus),
+                getCoordinates(data, i + 14, HeaderColumn.DeathStatus),
+            ];
+
             i += 15;
             break;
         }
@@ -36,31 +64,54 @@ function process(data: any): object {
 
     // create the kinship dictionary
     let person: string;
-    while (i < data["items"].length) {
-        let blackList: string[] = ["İÇİŞLERİ BAKANLIĞI", "T.C.", "ALT ÜST SOY BELGESİ"];
-        if (blackList.indexOf(data["items"][i]["str"]) !== -1) {
-            i += 1;
-            continue;
-        }
-        let start: number = data["items"][i]["transform"][4];
-        let end: number = start + data["items"][i]["width"];
-        if (!isNaN(data["items"][i]["str"]) && data["items"][i]["str"] !== " ")
-            person = data["items"][i]["str"];
-        if (!kinshipDict.hasOwnProperty(person))
-            kinshipDict[person] = {};
-        for (let key in tableCoordinates) {
-            if (tableCoordinates[key][0] <= start && tableCoordinates[key][1] >= end) {
-                if (!kinshipDict[person].hasOwnProperty(key))
-                    kinshipDict[person][key] = data["items"][i]["str"];
+    let columnIndex = 0;
+    let currentRecord = [];
+    const records = [];
+
+    function finishRow(){
+        currentRecord = [];
+        columnIndex = 0;
+    }
+
+    while (i < items.length) {
+        const item = items[i];
+        const xStart = item['transform'][4];
+        const xEnd = xStart + item['width'];
+        const inCurrentColumn = checkInColumn(tableCoordinates, columnIndex, xStart, xEnd);
+        const inNextColumn = checkInColumn(tableCoordinates, columnIndex + 1, xStart, xEnd);
+
+        if(inCurrentColumn){
+            if(item['str'].trim()) {
+                if (!currentRecord[columnIndex])
+                    currentRecord[columnIndex] = item['str'];
                 else
-                    kinshipDict[person][key] += data["items"][i]["str"];
-                break;
+                    currentRecord[columnIndex] += '\n' + item['str'];
             }
+        }else if(inNextColumn){
+            columnIndex++;
+            i--;
+        }else if(columnIndex === tableCoordinates.length - 1){
+            records.push(currentRecord);
+            finishRow();
+
+            i--;
+        }else{
+            // failed because the row reading has not finished yet.
+            finishRow();
         }
+
+        if(i === items.length - 1 && currentRecord.length === tableCoordinates.length){
+            records.push(currentRecord);
+            finishRow();
+        }
+
         i++;
     }
 
-    return kinshipDict;
+    return [
+        records,
+        tableCoordinates.map((cw, idx) => [cw.column, idx]) as HeaderColumnIndexPair[]
+    ];
 }
 
 
@@ -73,10 +124,16 @@ export default async function PDFParser(data: Uint8Array){
             .map(async (_, i) => {
                 const page = await doc.getPage(i + 1);
                 const content = await page.getTextContent();
+                const [stringMatrix, headers] = process(content);
 
-                return process(content);
+                return parseRecords(stringMatrix, headers);
             })
     );
+    const merged = results.reduce((acc, parseResult) => {
+        Array.prototype.push.apply(acc.records, parseResult.records);
+        Array.prototype.push.apply(acc.errors, parseResult.errors);
+        return acc;
+    }, { records: [], errors: [] });
 
     return [];
 };
