@@ -67,7 +67,7 @@ export function parseTableToStringMatrix(table: HTMLTableElement) : string[][] {
     if(tbodies.length != 1) throw new Error('there should be only one tbody');
     const rows = rowCollectionToArray(tbodies.item(0).rows);
 
-    return rows.map(row => cellCollectionToArray(row.cells).map(cell => cell.innerHTML));
+    return rows.map(row => cellCollectionToArray(row.cells).map(cell => cell.innerHTML.replace(/\<br\>/g, '\n')));
 }
 
 export function parseTableRecords(table: HTMLTableElement, headers: HeaderColumnIndexPair[]) : RecordParseResult {

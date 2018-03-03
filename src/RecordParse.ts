@@ -57,13 +57,13 @@ function trimSpacesAndDash(str: string) : string {
 }
 
 function parseBirthPlaceAndDate(str: string) : [string, Date] {
-    const split = str.split('<br>');
+    const split = str.split('\n');
     if(split.length != 2) throw new Error('birthplace and date is invalid. should have 2 lines.');
     return [split[0].trim(), parseTurkishDate(split[1].trim())];
 }
 
 function parseDeathStatus(str: string) : Date {
-    const split = str.split('<br>');
+    const split = str.split('\n');
     if(split.length != 2) return undefined;
     if(split[0].trim() != 'Ölüm') return undefined;
     return parseTurkishDate(split[1].trim());
@@ -77,7 +77,7 @@ function parseCiltHaneSiraNo(str: string) : [number, number, number] {
 }
 
 function parseBirthAddress(str: string) : string {
-    return trimSpacesAndDash(str).replace(/\<br\>/g, '');
+    return trimSpacesAndDash(str).replace(/(?:\r\n|\r|\n)/g, '');
 }
 
 export const columnToParser = {
