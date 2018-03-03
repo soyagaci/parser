@@ -105,6 +105,5 @@ export default async function HTMLParser(htmlStr: string) {
     const headers = parseHeaders(table);
     const records = parseRecords(table, headers);
 
-    console.log(headers, records);
     return [];
 };
