@@ -1,3 +1,4 @@
+declare function require(name:string);
 let createElement: (str: string) => HTMLElement;
 
 // try to require dom if we are not running inside browser
@@ -21,5 +22,5 @@ if(typeof window === 'undefined'){
 }
 
 export default function HTMLParser(str: string){
-    return createElement(str).querySelectorAll(".test").item(0).innerHTML;
+    return [];
 };
