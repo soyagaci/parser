@@ -48,12 +48,13 @@ export function parseHeaders(table: HTMLTableElement) : HeaderColumnIndexPair[]{
     if(thead.rows.length != 1) throw new Error('thead row size does not match one');
     const cells = cellCollectionToArray(thead.rows.item(0).cells);
 
-    const headers = cells.map((cell, i) => {
+    const headers = cells.reduce((headers, cell, i) => {
         const cellText = cell.innerHTML.trim();
         const header = findHeaderColumn(cellText);
 
-        return header ? [header, i] : undefined;
-    }).filter(x => x);
+        if(header) headers.push([header, i]);
+        return headers;
+    }, []);
 
     if(headers.length != Object.keys(HeaderColumn).length)
         throw new Error('not all headers were found in the tables header section');
