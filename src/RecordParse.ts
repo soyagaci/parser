@@ -16,6 +16,17 @@ export enum HeaderColumn{
     DeathStatus = 'Durumu',
 }
 
+export function isHeaderColumn(str: string) : boolean {
+    return Object.keys(HeaderColumn).map(k => HeaderColumn[k]).indexOf(str) !== -1;
+}
+
+export class RecordParseResult {
+    records: AncestorRecord[];
+    errors: [Error, string[]][];
+}
+
+export type HeaderColumnIndexPair = [HeaderColumn, number];
+
 function parseOrder(str: string) : number {
     return parseInt(str);
 }
@@ -133,4 +144,31 @@ export function parseRecordWithHeaders(
 
 
     return { relation, record: person as PersonRecord };
+}
+
+export function parseRecords(rows: string[][], headers: HeaderColumnIndexPair[]) : RecordParseResult {
+    const columns = headers.map(([column]) => column);
+    const headerMap = headers.reduce((acc, [column, idx]) => {
+        acc[column] = idx;
+        return acc;
+    }, {});
+
+    return rows.reduce((acc, cells) => {
+        // Invalid cell length for the row.
+        if(cells.length !== headers.length){
+            acc.errors.push([ new Error('invalid cell length for row, compared to headers.'), cells ]);
+            return acc;
+        }
+
+        try{
+            const columnTextGetter = (column) => cells[headerMap[column]].trim();
+            const record = parseRecordWithHeaders(columns, columnTextGetter);
+
+            acc.records.push(record);
+        }catch(ex){
+            acc.errors.push([ ex, cells ]);
+        }
+
+        return acc;
+    }, { records: [], errors: [] });
 }
