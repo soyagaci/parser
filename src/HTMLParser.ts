@@ -1,6 +1,6 @@
 let createElement: (str: string) => HTMLElement;
 import {
-    HeaderColumn, HeaderColumnIndexPair, isHeaderColumn, parseRecords, parseRecordWithHeaders,
+    HeaderColumn, HeaderColumnIndexPair, findHeaderColumn, parseRecords,
     RecordParseResult
 } from './RecordParse';
 
@@ -50,8 +50,9 @@ export function parseHeaders(table: HTMLTableElement) : HeaderColumnIndexPair[]{
 
     const headers = cells.map((cell, i) => {
         const cellText = cell.innerHTML.trim();
+        const header = findHeaderColumn(cellText);
 
-        return isHeaderColumn(cellText) ? [cellText as HeaderColumn, i] : undefined;
+        return header ? [header, i] : undefined;
     }).filter(x => x);
 
     if(headers.length != Object.keys(HeaderColumn).length)

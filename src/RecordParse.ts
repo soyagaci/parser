@@ -16,8 +16,9 @@ export enum HeaderColumn{
     DeathStatus = 'Durumu',
 }
 
-export function isHeaderColumn(str: string) : boolean {
-    return Object.keys(HeaderColumn).map(k => HeaderColumn[k]).indexOf(str) !== -1;
+export function findHeaderColumn(str: string) : HeaderColumn {
+    const keys = Object.keys(HeaderColumn);
+    return keys.map(k => HeaderColumn[k]).find(x => x == str);
 }
 
 export class RecordParseResult {
