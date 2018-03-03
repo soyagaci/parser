@@ -79,3 +79,6 @@ Session.vim
 *~
 # Auto-generated tag files
 tags
+
+# ignore example pdf files
+pdf_examples/
