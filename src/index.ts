@@ -23,7 +23,7 @@ function getCoordinates(data: object, index: number, step: number): number[] {
     return [data["items"][index - step]["transform"][4] + data["items"][index - step]["width"], data["items"][index + step]["transform"][4]];
 }
 
-PDFParser(data).then(function (data) {
+function process(data: any): object {
     let tableCoordinates: object = {};
     let kinshipDict: object = {};
     let i: number = 0;
@@ -51,7 +51,7 @@ PDFParser(data).then(function (data) {
     let person: string;
     while (i < data["items"].length) {
         let blackList: string[] = ["İÇİŞLERİ BAKANLIĞI", "T.C.", "ALT ÜST SOY BELGESİ"];
-        if(blackList.indexOf(data["items"][i]["str"]) !== -1) {
+        if (blackList.indexOf(data["items"][i]["str"]) !== -1) {
             i += 1;
             continue;
         }
@@ -72,7 +72,19 @@ PDFParser(data).then(function (data) {
         }
         i++;
     }
-    console.log(kinshipDict);
     return kinshipDict;
-});
+}
 
+PDFParser(data).then(function (data: any): object {
+    let numPages: number = data.numPages;
+    let results: object = {};
+    for (let i: number = 1; i <= numPages; i++) {
+        data.getPage(i)
+            .then((page) => page.getTextContent())
+            .then((content) => process(content))
+            .then(function (result) {
+                results[i] = result;
+            })
+    }
+    return results;
+});
