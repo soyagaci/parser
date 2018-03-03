@@ -18,15 +18,15 @@ declare function require(name: string);
 const fs = require('fs');
 const data = new Uint8Array(fs.readFileSync('pdf_examples/yigit_soy.pdf'));
 
-function getCoordinates(data, index, step) {
+function getCoordinates(data, index, step):number[] {
     // helper function for retrieving coordinates
     return [data["items"][index - step]["transform"][4] + data["items"][index - step]["width"], data["items"][index + step]["transform"][4]];
 }
 
 PDFParser(data).then(function (data) {
-    var tableCoordinates = {};
-    var kinshipDict = {};
-    var i = 0;
+    let tableCoordinates:object = {};
+    let kinshipDict:object = {};
+    let i:number = 0;
     // find the coordinates of the headers in format of {"header": [x1, x2], ...}
     while (i < data["items"].length) {
         if (data["items"][i]["str"] === "Sıra") {
@@ -48,21 +48,19 @@ PDFParser(data).then(function (data) {
         i++;
     }
     // create the kinship dictionary
-    let person;
+    let person:string;
     while (i < data["items"].length) {
-        let blackList = ["İÇİŞLERİ BAKANLIĞI", "T.C.", "ALT ÜST SOY BELGESİ"];
+        let blackList:string[] = ["İÇİŞLERİ BAKANLIĞI", "T.C.", "ALT ÜST SOY BELGESİ"];
         if(blackList.indexOf(data["items"][i]["str"]) !== -1) {
             i += 1;
             continue;
         }
-        let start = data["items"][i]["transform"][4];
-        let end = start + data["items"][i]["width"];
-        if (!isNaN(data["items"][i]["str"]) && data["items"][i]["str"] !== " ") {
+        let start:number = data["items"][i]["transform"][4];
+        let end:number = start + data["items"][i]["width"];
+        if (!isNaN(data["items"][i]["str"]) && data["items"][i]["str"] !== " ")
             person = data["items"][i]["str"];
-        }
-        if (!kinshipDict.hasOwnProperty(person)) {
+        if (!kinshipDict.hasOwnProperty(person))
             kinshipDict[person] = {};
-        }
         for (let key in tableCoordinates) {
             if (tableCoordinates[key][0] <= start && tableCoordinates[key][1] >= end) {
                 if (!kinshipDict[person].hasOwnProperty(key))
