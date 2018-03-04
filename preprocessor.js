@@ -1,7 +1,13 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
 const tsc = require('typescript');
-const tsConfig = require('./tsconfig.json');
+const tsConfig = {
+  compilerOptions: {
+    sourceMap: "true",
+    target: "es2015",
+    module: "commonjs",
+  },
+};
 
 module.exports = {
   process(src, path) {

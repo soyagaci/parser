@@ -1,10 +1,10 @@
-import {RecordParseResult} from "../src/RecordParse";
-const {matchParseResultWithExpectedResult} = require( "./Utils");
+const fs = require('fs');
+const path = require('path');
+import HTMLParser from '../lib/html';
+import { RecordParseResult } from '../lib/generic';
+const { matchParseResultWithExpectedResult } = require('./Utils');
 
 describe('HTMLParser Spec', () => {
-    const fs = require('fs');
-    const path = require('path');
-    const HTMLParser = require('../dist/html').default;
     const testDataPath = path.join(__dirname, './data/html');
     const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')));
 

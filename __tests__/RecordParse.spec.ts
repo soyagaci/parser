@@ -1,8 +1,8 @@
 import {
     parseBirthAddress, parseBirthPlaceAndDate, parseCiltHaneSiraNo, parseDeathStatus,
     trimSpacesAndDash
-} from "../src/RecordParse";
-import {DeathStatus} from "../src/Models";
+} from '../lib/generic';
+import { DeathStatus } from '../lib/models';
 
 describe('RecordParse spec', () => {
 

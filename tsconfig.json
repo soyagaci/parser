@@ -2,6 +2,12 @@
   "compilerOptions": {
     "sourceMap": true,
     "target": "es2015",
-    "module": "commonjs"
-  }
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "format",
+    "rootDir": "lib"
+  },
+  "include": [
+    "lib"
+  ]
 }

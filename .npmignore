@@ -41,13 +41,12 @@ build/Release
 /node_modules/
 
 # Ignore the dist directory
-/dist/
+/format/
+# Ignore the web build directory
+/webBuild/
 
 # Declarations directory
 /declarations/
-
-# Dist directory
-/dist/
 
 # NPM files
 .npmrc

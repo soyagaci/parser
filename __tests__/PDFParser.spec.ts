@@ -1,13 +1,13 @@
 /**
  * @jest-environment node
  */
-import {RecordParseResult} from "../src/RecordParse";
-const {matchParseResultWithExpectedResult} = require( "./Utils");
+const fs = require('fs');
+const path = require('path');
+import PDFParser from '../lib/pdf';
+import { RecordParseResult } from '../lib/generic';
+const { matchParseResultWithExpectedResult } = require('./Utils');
 
 describe('PDFParser Spec', () => {
-    const fs = require('fs');
-    const path = require('path');
-    const PDFParser = require('../dist/pdf').default;
     const testDataPath = path.join(__dirname, './data/pdf');
     const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')));
 

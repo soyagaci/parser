@@ -1,6 +1,8 @@
 .idea
 # ignore dist
-/dist/
+/format/
+# ignore the webBuild
+/webBuild/
 # node gitignore
 # Logs
 logs

@@ -5,12 +5,13 @@ module.exports = {
     filename: '[name].js',
     library: 'soyagaci-parser',
     libraryTarget: 'commonjs2',
-    path: path.join(__dirname, 'dist'), // where to place webpack files
+    path: path.join(__dirname, 'webBuild'), // where to place webpack files
   },
   entry: {
-    pdf: './src/PDFParser.ts',
-    html: './src/HTMLParser.ts',
-    text: './src/TextParser.ts'
+    'soyagaci-parser-html': './lib/html.ts',
+    'soyagaci-parser-pdf': './lib/pdf.ts',
+    'soyagaci-parser-text': './lib/text.ts',
+    'soyagaci-parser': './lib/index.ts'
   },
   resolve: {
     extensions: ['.ts', '.js'],
