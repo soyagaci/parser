@@ -46,6 +46,7 @@
     "moduleFileExtensions": [
       "ts", "js"
     ],
+    "moduleDirectories": ["node_modules", "src"],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/preprocessor.js"
     },
