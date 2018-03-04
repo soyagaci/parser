@@ -1,4 +1,4 @@
-import {findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, parseRecords} from "./RecordParse";
+import {findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult} from "./RecordParse";
 
 declare var PDFJS: any;
 
@@ -116,7 +116,7 @@ function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
 
 
 
-export default async function PDFParser(data: Uint8Array){
+export default async function PDFParser(data: Uint8Array) : Promise<RecordParseResult> {
     const doc = await PDFJS.getDocument(data);
     const numPages = doc.numPages;
     const results = await Promise.all(
@@ -129,11 +129,10 @@ export default async function PDFParser(data: Uint8Array){
                 return parseRecords(stringMatrix, headers);
             })
     );
-    const merged = results.reduce((acc, parseResult) => {
+
+    return results.reduce((acc, parseResult) => {
         Array.prototype.push.apply(acc.records, parseResult.records);
         Array.prototype.push.apply(acc.errors, parseResult.errors);
         return acc;
     }, { records: [], errors: [] });
-
-    return [];
 };

@@ -75,10 +75,8 @@ export function parseTableRecords(table: HTMLTableElement, headers: HeaderColumn
 }
 
 
-export default async function HTMLParser(htmlStr: string) {
+export default async function HTMLParser(htmlStr: string) : Promise<RecordParseResult> {
     const table = await getResultTable(htmlStr);
     const headers = parseHeaders(table);
-    const records = parseTableRecords(table, headers);
-
-    return [];
+    return parseTableRecords(table, headers);
 };
