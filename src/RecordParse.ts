@@ -73,6 +73,7 @@ export function parseGender(str: string) : Gender {
  * @return {string}
  */
 export function parseRelation(str: string) : string {
+    if(!str || str.constructor != String) throw new Error('invalid input');
     const relation = str.replace(/[^ABK]+/g, '');
     if(relation.length <= 0) throw new Error('invalid relation between user and ancestor');
     return relation;
@@ -84,6 +85,7 @@ export function parseRelation(str: string) : string {
  * @return {string}
  */
 export function trimSpacesAndDash(str: string) : string {
+    if(!str || str.constructor != String) return undefined;
     const value = str.trim();
 
     if(!value || value === '-') return undefined;
@@ -100,9 +102,14 @@ export function trimSpacesAndDash(str: string) : string {
  * @return {[string , Date]}
  */
 export function parseBirthPlaceAndDate(str: string) : [string, Date] {
+    if(!str || str.constructor != String) throw new Error('invalid input');
     const split = str.split('\n');
     if(split.length != 2) throw new Error('birthplace and date is invalid. should have 2 lines.');
-    return [split[0].trim(), parseTurkishDate(split[1].trim())];
+    let date = parseTurkishDate(split[1].trim());
+
+    date = !date || isNaN(date.getTime()) ? undefined : date;
+    if(!date) throw new Error('ancestor record without birthYear is unacceptable');
+    return [split[0].trim(), date];
 }
 
 /**
@@ -116,12 +123,13 @@ export function parseBirthPlaceAndDate(str: string) : [string, Date] {
  * @return {[string , Date]}
  */
 export function parseDeathStatus(str: string) : [DeathStatus, Date] {
+    if(!str || str.constructor != String) throw new Error('invalid input as death status');
     const split = str.split('\n');
     if(split.length != 2) return undefined;
     if(split[0].trim() != 'Ölüm') return [ DeathStatus.Alive, undefined ];
     let date = parseTurkishDate(split[1].trim());
 
-    date = isNaN(date.getTime()) ? undefined : date;
+    date = !date || isNaN(date.getTime()) ? undefined : date;
     return [ DeathStatus.Dead, date ];
 }
 
@@ -135,8 +143,9 @@ export function parseDeathStatus(str: string) : [DeathStatus, Date] {
  * @return {[number , number , number]}
  */
 export function parseCiltHaneSiraNo(str: string) : [number, number, number] {
+    if(!str || str.constructor != String) throw new Error('invalid input');
     const match = str.trim().match(/^([0-9]+)-([0-9]+)-([0-9]+)$/);
-    if(!match || match.length != 4) throw new Error('invalid cilt hane sira no tri.');
+    if(!match || match.length != 4) throw new Error('invalid cilt hane sira no tri');
 
     return [ parseInt(match[1]), parseInt(match[2]), parseInt(match[3]) ];
 }
@@ -147,7 +156,10 @@ export function parseCiltHaneSiraNo(str: string) : [number, number, number] {
  * @return {string}
  */
 export function parseBirthAddress(str: string) : string {
-    return trimSpacesAndDash(str).replace(/(?:\r\n|\r|\n)/g, '');
+    const trimmed = trimSpacesAndDash(str);
+    if(!trimmed) return trimmed;
+    const replaced = trimmed.replace(/(?:\r\n|\r|\n)/g, '').trim();
+    return replaced ? replaced : undefined;
 }
 
 // which parser function to use for the given column
