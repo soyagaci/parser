@@ -3,6 +3,7 @@
  */
 
 describe('TextParserSpec', () => {
+    const {matchParseResultWithExpectedResult} = require( "./Utils");
     const fs = require('fs');
     const path = require('path');
     const TextParser = require('../dist/text').default;
@@ -10,11 +11,12 @@ describe('TextParserSpec', () => {
     const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')));
 
     it('should work', async () => {
-        tests.forEach((test) => {
+        for(let i = 0; i < tests.length; i++) {
+            const test = tests[i];
             const textData = fs.readFileSync(path.join(testDataPath, test['file']));
-            const result = TextParser(textData);
+            const result = await TextParser(textData);
 
-            expect(result).toEqual(test['expectedResult']);
-        });
+            matchParseResultWithExpectedResult(result, test['expectedResult']);
+        }
     });
 });
