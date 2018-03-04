@@ -1,4 +1,8 @@
-import {findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult} from "./RecordParse";
+import {
+    findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, mergeRecordParseResults, parseRecords,
+    RecordParseResult
+} from "./RecordParse";
+import {PDFDocumentProxy, TextContent} from "pdfjs-dist";
 
 declare var PDFJS: any;
 
@@ -30,18 +34,17 @@ function checkInColumn(columns: ColumnWidth[], columnIndex: number, xStart: numb
     return xStart > columnStart && xEnd < columnEnd;
 }
 
-function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
-    let tableCoordinates : ColumnWidth[] = [];
+function parseHeaders(data: TextContent): [ColumnWidth[], number]{
     let kinshipDict: object = {};
     let i: number = 0;
-    const items = data['items'];
+    const items = data.items;
 
     // find the coordinates of the headers in format of {"header": [x1, x2], ...}
     while (i < items.length) {
         const item = items[i];
 
         if (item["str"] === HeaderColumn.Order) {
-            tableCoordinates = [
+            const columns = [
                 getCoordinates(data, i, HeaderColumn.Order),
                 getCoordinates(data, i + 1, HeaderColumn.Gender),
                 getCoordinates(data, i + 2, HeaderColumn.Relation),
@@ -56,14 +59,15 @@ function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
                 getCoordinates(data, i + 14, HeaderColumn.DeathStatus),
             ];
 
-            i += 15;
-            break;
+            return [columns, i + 15];
         }
         i++;
     }
+}
 
-    // create the kinship dictionary
-    let person: string;
+function parsePDFToStringMatrix(data: TextContent, columns: ColumnWidth[], startPos: number) : string[][]{
+    let i = startPos;
+    const items = data.items;
     let columnIndex = 0;
     let currentRecord = [];
     const records = [];
@@ -77,20 +81,18 @@ function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
         const item = items[i];
         const xStart = item['transform'][4];
         const xEnd = xStart + item['width'];
-        const inCurrentColumn = checkInColumn(tableCoordinates, columnIndex, xStart, xEnd);
-        const inNextColumn = checkInColumn(tableCoordinates, columnIndex + 1, xStart, xEnd);
 
-        if(inCurrentColumn){
+        if(checkInColumn(columns, columnIndex, xStart, xEnd)){
             if(item['str'].trim()) {
                 if (!currentRecord[columnIndex])
                     currentRecord[columnIndex] = item['str'];
                 else
                     currentRecord[columnIndex] += '\n' + item['str'];
             }
-        }else if(inNextColumn){
+        }else if(checkInColumn(columns, columnIndex + 1, xStart, xEnd)){
             columnIndex++;
             i--;
-        }else if(columnIndex === tableCoordinates.length - 1){
+        }else if(columnIndex === columns.length - 1){
             records.push(currentRecord);
             finishRow();
 
@@ -100,7 +102,7 @@ function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
             finishRow();
         }
 
-        if(i === items.length - 1 && currentRecord.length === tableCoordinates.length){
+        if(i === items.length - 1 && currentRecord.length === columns.length){
             records.push(currentRecord);
             finishRow();
         }
@@ -108,31 +110,26 @@ function process(data: any) : [string[][], HeaderColumnIndexPair[]]{
         i++;
     }
 
-    return [
-        records,
-        tableCoordinates.map((cw, idx) => [cw.column, idx]) as HeaderColumnIndexPair[]
-    ];
+    return records;
 }
 
+export async function parseSinglePage(doc: PDFDocumentProxy, pageNum: number) : Promise<RecordParseResult>{
+    const page = await doc.getPage(pageNum);
+    const content = await page.getTextContent();
+    const [columns, startPos] = parseHeaders(content);
+    const stringMatrix = parsePDFToStringMatrix(content, columns, startPos);
+    const headers = columns.map((cw, idx) => [cw.column, idx]) as HeaderColumnIndexPair[];
 
+    return parseRecords(stringMatrix, headers);
+}
 
 export default async function PDFParser(data: Uint8Array) : Promise<RecordParseResult> {
     const doc = await PDFJS.getDocument(data);
     const numPages = doc.numPages;
     const results = await Promise.all(
         [ ...new Array(doc.numPages) ]
-            .map(async (_, i) => {
-                const page = await doc.getPage(i + 1);
-                const content = await page.getTextContent();
-                const [stringMatrix, headers] = process(content);
-
-                return parseRecords(stringMatrix, headers);
-            })
+            .map(async (_, i) => parseSinglePage(doc, i + 1))
     );
 
-    return results.reduce((acc, parseResult) => {
-        Array.prototype.push.apply(acc.records, parseResult.records);
-        Array.prototype.push.apply(acc.errors, parseResult.errors);
-        return acc;
-    }, { records: [], errors: [] });
+    return results.reduce(mergeRecordParseResults, { records: [], errors: [] });
 };

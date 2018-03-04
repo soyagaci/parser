@@ -178,3 +178,9 @@ export function parseRecords(rows: string[][], headers: HeaderColumnIndexPair[])
         return acc;
     }, { records: [], errors: [] });
 }
+
+export function mergeRecordParseResults(acc: RecordParseResult, parseResult: RecordParseResult){
+    Array.prototype.push.apply(acc.records, parseResult.records);
+    Array.prototype.push.apply(acc.errors, parseResult.errors);
+    return acc;
+}
