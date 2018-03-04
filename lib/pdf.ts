@@ -2,20 +2,23 @@ import {
     findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, mergeRecordParseResults, parseRecords,
     RecordParseResult
 } from "./generic";
-import {PDFDocumentProxy, TextContent, TextContentItem} from "pdfjs-dist";
+import {PDFDocumentProxy, PDFJSStatic, TextContent, TextContentItem} from "pdfjs-dist";
 
-declare var PDFJS: any;
+declare var window: any;
+let pdfjsRef : PDFJSStatic;
 
 function initPDFJS(){
-    // Try to require PDFJS if its not globally defined.
-    PDFJS = require('pdfjs-dist');
+    if(typeof window !== 'undefined' && typeof window.PDFJS !== 'undefined')
+        pdfjsRef = window.PDFJS;
+    else
+        pdfjsRef = require('pdfjs-dist');
 }
 
 // lazily initialize and get pdfjs
 function getPDFJS() {
     // init pdfjs if its not defined
-    if (typeof PDFJS === 'undefined') initPDFJS();
-    return PDFJS;
+    if (!pdfjsRef) initPDFJS();
+    return pdfjsRef;
 }
 
 // A structure to hold where each of the table header texts start and finish, and which column they belong to.
