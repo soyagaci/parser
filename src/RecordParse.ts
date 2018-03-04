@@ -1,6 +1,7 @@
 import {Gender, AncestorRecord, PersonRecord, DeathStatus} from "./Models";
 import { parseTurkishDate } from "./Utils";
 
+// definition of each header columns for html/pdf/text tables.
 export enum HeaderColumn{
     Order = 'Sıra',
     Gender = 'C',
@@ -16,23 +17,41 @@ export enum HeaderColumn{
     DeathStatus = 'Durumu',
 }
 
+/**
+ * tries to find the given string in the headers. if its a valid header title, returns the matching header.
+ * @param {string} str
+ * @return {HeaderColumn}
+ */
 export function findHeaderColumn(str: string) : HeaderColumn {
     const keys = Object.keys(HeaderColumn);
     return keys.map(k => HeaderColumn[k]).find(x => x == str);
 }
 
 export class RecordParseResult {
+    // sucessfully parsed ancestor record items
     records: AncestorRecord[];
+    // rows that could not be parsed correctly and the error
     errors: [Error, string[]][];
 }
 
+// the pair of header and which row column the data for that column is in
 export type HeaderColumnIndexPair = [HeaderColumn, number];
 
-function parseOrder(str: string) : number {
+/**
+ * Parses the order into an integer.
+ * @param {string} str
+ * @return {number}
+ */
+export function parseOrder(str: string) : number {
     return parseInt(str);
 }
 
-function parseGender(str: string) : Gender {
+/**
+ * Parses the gender string into the Gender enum.
+ * @param {string} str
+ * @return {Gender}
+ */
+export function parseGender(str: string) : Gender {
     switch(str){
         case 'E':
             return Gender.Male;
@@ -43,26 +62,60 @@ function parseGender(str: string) : Gender {
     }
 }
 
-function parseRelation(str: string) : string {
+/**
+ * Converts the long relation into a simpler to use format, where each of the letters define a relation in the
+ * mother's or father's side. For example:
+ * Annesinin Annesi -> AA which essentially means relative to our user, this person is his mother's mother
+ * Babasının Annessinin Babası -> BAB which means our user's Father's Mother's Father
+ * the K means the record belongs to our user itself.
+ * Possible values: [AB]+ or K
+ * @param {string} str
+ * @return {string}
+ */
+export function parseRelation(str: string) : string {
     const relation = str.replace(/[^ABK]+/g, '');
     if(relation.length <= 0) throw new Error('invalid relation between user and ancestor');
     return relation;
 }
 
-function trimSpacesAndDash(str: string) : string {
+/**
+ * Trims the spaces and dashes from the given string. And returns undefined if its not valid. A custom trim function.
+ * @param {string} str
+ * @return {string}
+ */
+export function trimSpacesAndDash(str: string) : string {
     const value = str.trim();
 
     if(!value || value === '-') return undefined;
     return value;
 }
 
-function parseBirthPlaceAndDate(str: string) : [string, Date] {
+/**
+ * Parses the birth place and date from the given string. Expects them to be sepeareted by \n and there is only one new line.
+ * The date is in the Turkish day/month/year format. The resulting Date object is UTC.
+ * For example:
+ * Ordu
+ * 01/01/1979
+ * @param {string} str
+ * @return {[string , Date]}
+ */
+export function parseBirthPlaceAndDate(str: string) : [string, Date] {
     const split = str.split('\n');
     if(split.length != 2) throw new Error('birthplace and date is invalid. should have 2 lines.');
     return [split[0].trim(), parseTurkishDate(split[1].trim())];
 }
 
-function parseDeathStatus(str: string) : [DeathStatus, Date] {
+/**
+ * Parses the death status from the given string. And returns an enum describing the state and the date of death if
+ * its present. The date maybe undefined or valid in the case of some DeathStatus.Dead.
+ * The date is in the Turkish day/month/year format. The resulting Date object is UTC.
+ * For example:
+ * Ölüm
+ * 01/01/1979
+ * @param {string} str
+ * @return {[string , Date]}
+ */
+export function parseDeathStatus(str: string) : [DeathStatus, Date] {
     const split = str.split('\n');
     if(split.length != 2) return undefined;
     if(split[0].trim() != 'Ölüm') return [ DeathStatus.Alive, undefined ];
@@ -72,18 +125,33 @@ function parseDeathStatus(str: string) : [DeathStatus, Date] {
     return [ DeathStatus.Dead, date ];
 }
 
-function parseCiltHaneSiraNo(str: string) : [number, number, number] {
+/**
+ * Parses id information regarding the order of registration of the person's into the family.
+ * Three variables in order are:
+ * - the book number the family is registered to
+ * - the order of the family in the book
+ * - the order of the person in the family
+ * @param {string} str
+ * @return {[number , number , number]}
+ */
+export function parseCiltHaneSiraNo(str: string) : [number, number, number] {
     const match = str.trim().match(/^([0-9]+)-([0-9]+)-([0-9]+)$/);
     if(!match || match.length != 4) throw new Error('invalid cilt hane sira no tri.');
 
     return [ parseInt(match[1]), parseInt(match[2]), parseInt(match[3]) ];
 }
 
-function parseBirthAddress(str: string) : string {
+/**
+ * Returns the birth address from the given string. Strips new lines and returns a one line address.
+ * @param {string} str
+ * @return {string}
+ */
+export function parseBirthAddress(str: string) : string {
     return trimSpacesAndDash(str).replace(/(?:\r\n|\r|\n)/g, '');
 }
 
-export const columnToParser = {
+// which parser function to use for the given column
+const columnToParser = {
     [HeaderColumn.Order]: parseOrder,
     [HeaderColumn.Gender]: parseGender,
     [HeaderColumn.Relation]: parseRelation,
@@ -98,7 +166,8 @@ export const columnToParser = {
     [HeaderColumn.CitHaneSiraNo]: parseCiltHaneSiraNo,
 };
 
-export const columnToField = {
+// which field to output the parser result when parsing a row.
+const columnToField = {
     [HeaderColumn.Order]: 'order',
     [HeaderColumn.Gender]: 'gender',
     [HeaderColumn.Relation]: 'relation',
@@ -113,6 +182,12 @@ export const columnToField = {
     [HeaderColumn.CitHaneSiraNo]: 'ciltHaneSiraNo',
 };
 
+/**
+ * Given a list of columns, and a function that helps accessing to column data for any given column, parses an ancestor record
+ * @param {HeaderColumn[]} columns the columns to use when doing the parsing
+ * @param {(column: HeaderColumn) => string} columnTextGetter the accessor function for the row data
+ * @return {AncestorRecord}
+ */
 export function parseRecordWithHeaders(
     columns: HeaderColumn[],
     columnTextGetter: (column: HeaderColumn) => string
@@ -122,19 +197,24 @@ export function parseRecordWithHeaders(
         const field = columnToField[column];
 
         if(!parser || !field) throw new Error(`could not found parse or field for column ${column}`);
+        // get column data for the given header column, and parse it with the found parser.
         const value = parser(columnTextGetter(column));
 
+        // add the result value if there is any to the result object.
         if(value) result[field] = value;
         return result;
     }, {});
 
+    // we will put the relation out of the person record
     const relation = record['relation'];
     delete record['relation'];
 
+    // rename the parsed results into person record fields
     const [ birthPlace, birthYear ] = record['birthPlaceAndDate'];
     const [ ciltNo, haneNo, siraNo ] = record['ciltHaneSiraNo'];
     const [ deathStatus, dateOfDeath ]  = record['status'];
 
+    // create a person record
     const person = [
         'order', 'gender', 'name', 'lastName',
         'fathersName', 'mothersName', 'marriageStatus',
@@ -152,13 +232,23 @@ export function parseRecordWithHeaders(
     return { relation, record: person as PersonRecord };
 }
 
+/**
+ * Given a 2d matrix of string, which represents rows of data, and a list of header/column index pair, does the
+ * hard job of parsing each row into AncestorRecord. Keeps both the successful parsing results and the failed ones.
+ * @param {string[][]} rows the columns of data in rows.
+ * @param {HeaderColumnIndexPair[]} headers the headers and which row/columns that we will look to get their data.
+ * @return {RecordParseResult}
+ */
 export function parseRecords(rows: string[][], headers: HeaderColumnIndexPair[]) : RecordParseResult {
+    // get only the columns from the pairs
     const columns = headers.map(([column]) => column);
+    // create a column to row index mapping HeaderColumn -> number
     const headerMap = headers.reduce((acc, [column, idx]) => {
         acc[column] = idx;
         return acc;
     }, {});
 
+    // for each row, try to parse it
     return rows.reduce((acc, cells) => {
         // Invalid cell length for the row.
         if(cells.length !== headers.length){
@@ -167,6 +257,9 @@ export function parseRecords(rows: string[][], headers: HeaderColumnIndexPair[])
         }
 
         try{
+            // a function that lets the parseRecordWithHeaders access to this rows column data.
+            // you give it a column, and it gives you the associated data in the row by looking up the
+            // header column index pair list.
             const columnTextGetter = (column) => cells[headerMap[column]].trim();
             const record = parseRecordWithHeaders(columns, columnTextGetter);
 
@@ -179,6 +272,12 @@ export function parseRecords(rows: string[][], headers: HeaderColumnIndexPair[])
     }, { records: [], errors: [] });
 }
 
+/**
+ * Given two different record parse results, merges them into one.
+ * @param {RecordParseResult} acc
+ * @param {RecordParseResult} parseResult
+ * @return {RecordParseResult}
+ */
 export function mergeRecordParseResults(acc: RecordParseResult, parseResult: RecordParseResult){
     Array.prototype.push.apply(acc.records, parseResult.records);
     Array.prototype.push.apply(acc.errors, parseResult.errors);
