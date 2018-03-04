@@ -1,22 +1,22 @@
-import {HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult} from "./generic";
+import { HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult } from './generic';
 
 function parseText(buffer: Buffer): RecordParseResult {
     const str: string = buffer.toString();
-    const pattern: RegExp = /\d+\t(E|K)\t[ABK]/g;
-    let results: string[][] = [];
+    const pattern: RegExp = /\d+\t[EK]\t[ABK]/g;
+    const results: string[][] = [];
     let currentMatch = pattern.exec(str);
 
     // iterate through matches and add the data between them into the results array
-    while(currentMatch != null){
-        let start: number = currentMatch.index;
+    while(currentMatch != null) {
+        const start: number = currentMatch.index;
         currentMatch = pattern.exec(str);
-        let end: number = (currentMatch != null) ? currentMatch.index : -1;
+        const end: number = (currentMatch != null) ? currentMatch.index : -1;
 
-        let record: string[] = str.slice(start, end).split("\t");
+        const record: string[] = str.slice(start, end).split('\t');
         results.push(record);
     }
 
-    let HeaderColumnIndexPairs: HeaderColumnIndexPair[] = [
+    const HeaderColumnIndexPairs: HeaderColumnIndexPair[] = [
         [HeaderColumn.Order, 0],
         [HeaderColumn.Gender, 1],
         [HeaderColumn.Relation, 2],
@@ -28,12 +28,11 @@ function parseText(buffer: Buffer): RecordParseResult {
         [HeaderColumn.BirthAddress, 8],
         [HeaderColumn.BirthPlaceAndDate, 7],
         [HeaderColumn.DeathStatus, 11],
-        [HeaderColumn.CitHaneSiraNo, 9]
+        [HeaderColumn.CitHaneSiraNo, 9],
     ];
 
     return parseRecords(results, HeaderColumnIndexPairs);
 }
-
 
 export function TextParser(buffer: Buffer): Promise<RecordParseResult> {
     return Promise.resolve(parseText(buffer));

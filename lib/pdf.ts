@@ -1,13 +1,12 @@
+import { PDFDocumentProxy, PDFJSStatic, TextContent, TextContentItem } from 'pdfjs-dist';
 import {
-    findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, mergeRecordParseResults, parseRecords,
-    RecordParseResult
-} from "./generic";
-import {PDFDocumentProxy, PDFJSStatic, TextContent, TextContentItem} from "pdfjs-dist";
+    HeaderColumn, HeaderColumnIndexPair, mergeRecordParseResults, parseRecords, RecordParseResult,
+} from './generic';
 
 declare var window: any;
-let pdfjsRef : PDFJSStatic;
+let pdfjsRef: PDFJSStatic;
 
-function initPDFJS(){
+function initPDFJS() {
     if(typeof window !== 'undefined' && typeof window.PDFJS !== 'undefined')
         pdfjsRef = window.PDFJS;
     else
@@ -22,13 +21,17 @@ function getPDFJS() {
 }
 
 // A structure to hold where each of the table header texts start and finish, and which column they belong to.
-class ColumnWidth{
-    // the start x position of the column
-    start: number;
-    // the end x position of the column
-    end: number;
-    // which header column the pdf header belongs to in our generic parser
-    column: HeaderColumn;
+class ColumnWidth {
+    constructor(
+        // the start x position of the column
+        readonly start: number,
+        // the end x position of the column
+        readonly end: number,
+        // which header column the pdf header belongs to in our generic parser
+        readonly column: HeaderColumn,
+    ) {
+        //
+    }
 }
 
 /**
@@ -41,9 +44,9 @@ class ColumnWidth{
  */
 function getCoordinates(items: TextContentItem[], index: number, column: HeaderColumn): ColumnWidth {
     return {
-        start: items[index].transform[4],
+        column,
         end: items[index].transform[4] + items[index].width,
-        column
+        start: items[index].transform[4],
     };
 }
 
@@ -56,7 +59,7 @@ function getCoordinates(items: TextContentItem[], index: number, column: HeaderC
  * @param {number} xEnd the end position of the item
  * @return {boolean}
  */
-function checkInColumn(columns: ColumnWidth[], columnIndex: number, xStart: number, xEnd: number) : boolean {
+function checkInColumn(columns: ColumnWidth[], columnIndex: number, xStart: number, xEnd: number): boolean {
     const previousColumn = columns[columnIndex - 1];
     const nextColumn = columns[columnIndex + 1];
     const columnStart = previousColumn ? previousColumn.end : 0;
@@ -65,8 +68,7 @@ function checkInColumn(columns: ColumnWidth[], columnIndex: number, xStart: numb
     return xStart > columnStart && xEnd < columnEnd;
 }
 
-function parseHeaders(data: TextContent): [ColumnWidth[], number]{
-    let kinshipDict: object = {};
+function parseHeaders(data: TextContent): [ColumnWidth[], number] {
     let i: number = 0;
     const items = data.items;
 
@@ -75,7 +77,7 @@ function parseHeaders(data: TextContent): [ColumnWidth[], number]{
         const item = items[i];
 
         // if the current item matches the HeaderColumn's first column, we got the start of the headers
-        if (item["str"] === HeaderColumn.Order) {
+        if (item.str === HeaderColumn.Order) {
             // assume the position of other columns with hardcoded relative positions to current item
             const columns = [
                 getCoordinates(items, i, HeaderColumn.Order),
@@ -107,7 +109,7 @@ function parseHeaders(data: TextContent): [ColumnWidth[], number]{
  * @param {number} startPos the startPos to start searching for data.
  * @return {string[][]}
  */
-function parsePDFToStringMatrix(data: TextContent, columns: ColumnWidth[], startPos: number) : string[][]{
+function parsePDFToStringMatrix(data: TextContent, columns: ColumnWidth[], startPos: number): string[][] {
     let i = startPos;
     const items = data.items;
     // start by searching for an item thats in the boundry box of first column
@@ -116,7 +118,7 @@ function parsePDFToStringMatrix(data: TextContent, columns: ColumnWidth[], start
     const records = [];
 
     // restart to the starting column
-    function finishRow(){
+    function finishRow() {
         currentRecord = [];
         columnIndex = 0;
     }
@@ -126,34 +128,32 @@ function parsePDFToStringMatrix(data: TextContent, columns: ColumnWidth[], start
         const xStart = item.transform[4];
         const xEnd = xStart + item.width;
 
-        if(checkInColumn(columns, columnIndex, xStart, xEnd)){ // if the item is in the current column
+        if(checkInColumn(columns, columnIndex, xStart, xEnd)) { // if the item is in the current column
             // and is not an empty string...
-            if(item['str'].trim()) {
+            if(item.str.trim())
                 if (!currentRecord[columnIndex])
                     // set the first value of the current row's column
-                    currentRecord[columnIndex] = item['str'];
+                    currentRecord[columnIndex] = item.str;
                 else
                     // append the item to the current row's column
-                    currentRecord[columnIndex] += '\n' + item['str'];
-            }
-        } else if(checkInColumn(columns, columnIndex + 1, xStart, xEnd)){ // if the item is in the next column
+                    currentRecord[columnIndex] += '\n' + item.str;
+        } else if(checkInColumn(columns, columnIndex + 1, xStart, xEnd)) { // if the item is in the next column
             // this item belongs to the next column, so we increment the current column index
             // and decrement the i, so the next loop will process the item with the correct column
             columnIndex++;
             i--;
-        }else if(columnIndex === columns.length - 1){ // if not in both columns, but the row reading has finished...
+        } else if(columnIndex === columns.length - 1) { // if not in both columns, but the row reading has finished...
             // we commit the accumulated record into the result array, and reset the row reading
             records.push(currentRecord);
             finishRow();
             // this column needs to be re-processed
             i--;
-        }else{ // not in current or next column, the row reading has not finished
+        } else // not in current or next column, the row reading has not finished
             // so we just abondon the current row
             finishRow();
-        }
 
         // if the items are finished, but the last row has not been commited
-        if(i === items.length - 1 && currentRecord.length === columns.length){
+        if(i === items.length - 1 && currentRecord.length === columns.length) {
             // we commit the acummulated record and finish the row...
             records.push(currentRecord);
             finishRow();
@@ -171,7 +171,7 @@ function parsePDFToStringMatrix(data: TextContent, columns: ColumnWidth[], start
  * @param {number} pageNum
  * @return {Promise<RecordParseResult>}
  */
-export async function parseSinglePage(doc: PDFDocumentProxy, pageNum: number) : Promise<RecordParseResult>{
+export async function parseSinglePage(doc: PDFDocumentProxy, pageNum: number): Promise<RecordParseResult> {
     const page = await doc.getPage(pageNum);
     const content = await page.getTextContent();
     const [columns, startPos] = parseHeaders(content);
@@ -187,13 +187,12 @@ export async function parseSinglePage(doc: PDFDocumentProxy, pageNum: number) : 
  * @return {Promise<RecordParseResult>}
  * @constructor
  */
-export async function PDFParser(data: Uint8Array) : Promise<RecordParseResult> {
+export async function PDFParser(data: Uint8Array): Promise<RecordParseResult> {
     const doc = await getPDFJS().getDocument(data);
-    const numPages = doc.numPages;
     // for each page, run the parseSinglePage in async, wait for all of them to finish
     const results = await Promise.all(
         [ ...new Array(doc.numPages) ]
-            .map(async (_, i) => parseSinglePage(doc, i + 1))
+            .map(async (_, i) => parseSinglePage(doc, i + 1)),
     );
 
     // merge all page results into one.

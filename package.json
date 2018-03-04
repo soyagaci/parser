@@ -7,7 +7,8 @@
     "test": "jest",
     "build": "tsc",
     "build:web": "webpack",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "lint": "tslint lib/**/*.ts{,x} __tests__/**/*.ts{,x}"
   },
   "repository": {
     "type": "git",

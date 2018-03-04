@@ -1,22 +1,23 @@
 /**
  * @jest-environment node
  */
-const fs = require('fs');
-const path = require('path');
-import PDFParser from '../lib/pdf';
+import * as fs from 'fs';
+import * as path from 'path';
 import { RecordParseResult } from '../lib/generic';
-const { matchParseResultWithExpectedResult } = require('./Utils');
+import PDFParser from '../lib/pdf';
+import { matchParseResultWithExpectedResult } from './Utils';
 
 describe('PDFParser Spec', () => {
     const testDataPath = path.join(__dirname, './data/pdf');
-    const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')));
+    const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')).toString());
 
     it('should return the expected results for hardcoded test files', async () => {
-        for(let i = 0; i < tests.length; i++){
-            const test = tests[i];
+        for(const test of tests) {
+            /* tslint:disable:no-string-literal */
             const data = new Uint8Array(fs.readFileSync(path.join(testDataPath, test['file'])));
             const result = await PDFParser(data);
             const expectedResult = test['expectedResult'] as RecordParseResult;
+            /* tslint:enable:no-string-literal */
 
             matchParseResultWithExpectedResult(result, expectedResult);
         }

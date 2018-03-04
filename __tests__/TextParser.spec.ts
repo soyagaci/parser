@@ -1,22 +1,23 @@
 /**
  * @jest-environment node
  */
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 import TextParser from '../lib/text';
-const { matchParseResultWithExpectedResult } = require('./Utils');
+import { matchParseResultWithExpectedResult } from './Utils';
 
 describe('TextParserSpec', () => {
     const testDataPath = path.join(__dirname, './data/text');
-    const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')));
+    const tests = JSON.parse(fs.readFileSync(path.join(testDataPath, './tests.json')).toString());
 
     it('should work', async () => {
-        for(let i = 0; i < tests.length; i++) {
-            const test = tests[i];
+        for(const test of tests) {
+            /* tslint:disable:no-string-literal */
             const textData = fs.readFileSync(path.join(testDataPath, test['file']));
             const result = await TextParser(textData);
 
             matchParseResultWithExpectedResult(result, test['expectedResult']);
+            /* tslint:enable:no-string-literal */
         }
     });
 });

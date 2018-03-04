@@ -1,6 +1,5 @@
 import {
-    parseBirthAddress, parseBirthPlaceAndDate, parseCiltHaneSiraNo, parseDeathStatus,
-    trimSpacesAndDash
+    parseBirthAddress, parseBirthPlaceAndDate, parseCiltHaneSiraNo, parseDeathStatus, trimSpacesAndDash,
 } from '../lib/generic';
 import { DeathStatus } from '../lib/models';
 
@@ -32,9 +31,9 @@ describe('RecordParse spec', () => {
         const f = parseCiltHaneSiraNo;
 
         it('should work for valid cilt hane sira nos', () => {
-            expect(f('1-2-3')).toEqual([1,2,3]);
-            expect(f('01-2-03')).toEqual([1,2,3]);
-            expect(f('734-42-9999')).toEqual([734,42,9999]);
+            expect(f('1-2-3')).toEqual([1, 2, 3]);
+            expect(f('01-2-03')).toEqual([1, 2, 3]);
+            expect(f('734-42-9999')).toEqual([734, 42, 9999]);
         });
         it('should throw for invalid cilt hane sira nos', () => {
             expect(() => f(undefined)).toThrow('invalid input');
