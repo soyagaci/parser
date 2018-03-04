@@ -32,7 +32,14 @@ Eğer HTMLParser ile hata alıyorsanız, `npm install --save jsdom` yapınız.
 ### Standart script olarak kullanmak
 Proje'yi web uygulamalarında `<script>` tag'ı ile kullanmak mümkündür. Bunun için projenin daha önceden build edilmiş bir scriptini, veya proje'yi clonelayıp, `node run build:web` yaptıktan sonra, webBuild'deki dosyaları web projenize ekleyiniz.
 
+[Releases](/releases) bölümünde bu js dosyalarının build edilmiş halini bulabilirsiniz.
+
+Aşağıdakilerden durumunuza göre 1 veya 1'den fazlasını kullanabilirsiniz. Eğer PDFParser kullanacaksanız, pdfjs'yi daha önceden `<script>` olarak eklemiş olmanız gerekmekte.
+
 ```html
+<-- örnek pdfjs scripti -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.402/pdf.min.js" />
+
 <-- html/text/pdf parsing tek dosyada -->
 <script type="text/javascript" src="soyagaci-parser.js" />
 <-- Sadece html parsing ve yardımcı fonksiyonları -->
