@@ -3,6 +3,11 @@ export enum Gender {
     Male = 'E',
 }
 
+export enum DeathStatus {
+    Alive = 'Sağ',
+    Dead = 'Ölüm',
+}
+
 // mother of, father of, child to mother, child to father relation types.
 export type RelationType = 'MO' | 'FO' | 'CTM' | 'CTF';
 
@@ -31,6 +36,8 @@ export class PersonRecord {
     siraNo: number;
     // marriage status for the person.
     marriageStatus: string;
+    // wether the person is dead or alive
+    deathStatus: DeathStatus;
     // date of death for the person.
     dateOfDeath?: Date;
 }

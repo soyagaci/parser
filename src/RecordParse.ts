@@ -1,4 +1,4 @@
-import {Gender, AncestorRecord, PersonRecord} from "./Models";
+import {Gender, AncestorRecord, PersonRecord, DeathStatus} from "./Models";
 import { parseTurkishDate } from "./Utils";
 
 export enum HeaderColumn{
@@ -62,11 +62,14 @@ function parseBirthPlaceAndDate(str: string) : [string, Date] {
     return [split[0].trim(), parseTurkishDate(split[1].trim())];
 }
 
-function parseDeathStatus(str: string) : Date {
+function parseDeathStatus(str: string) : [DeathStatus, Date] {
     const split = str.split('\n');
     if(split.length != 2) return undefined;
-    if(split[0].trim() != 'Ölüm') return undefined;
-    return parseTurkishDate(split[1].trim());
+    if(split[0].trim() != 'Ölüm') return [ DeathStatus.Alive, undefined ];
+    let date = parseTurkishDate(split[1].trim());
+
+    date = isNaN(date.getTime()) ? undefined : date;
+    return [ DeathStatus.Dead, date ];
 }
 
 function parseCiltHaneSiraNo(str: string) : [number, number, number] {
@@ -106,7 +109,7 @@ export const columnToField = {
     [HeaderColumn.MarriageStatus]: 'marriageStatus',
     [HeaderColumn.BirthAddress]: 'birthNeighbourhood',
     [HeaderColumn.BirthPlaceAndDate]: 'birthPlaceAndDate',
-    [HeaderColumn.DeathStatus]: 'dateOfDeath',
+    [HeaderColumn.DeathStatus]: 'status',
     [HeaderColumn.CitHaneSiraNo]: 'ciltHaneSiraNo',
 };
 
@@ -130,6 +133,8 @@ export function parseRecordWithHeaders(
 
     const [ birthPlace, birthYear ] = record['birthPlaceAndDate'];
     const [ ciltNo, haneNo, siraNo ] = record['ciltHaneSiraNo'];
+    const [ deathStatus, dateOfDeath ]  = record['status'];
+
     const person = [
         'order', 'gender', 'name', 'lastName',
         'fathersName', 'mothersName', 'marriageStatus',
@@ -140,7 +145,7 @@ export function parseRecordWithHeaders(
 
         return acc;
     }, {
-        birthPlace, birthYear, ciltNo, haneNo, siraNo
+        birthPlace, birthYear, ciltNo, haneNo, siraNo, deathStatus, dateOfDeath
     });
 
 
