@@ -40,10 +40,8 @@ build/Release
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 /node_modules/
 
-# Ignore the dist directory
-/format/
 # Ignore the web build directory
-/webBuild/
+/webBuild
 
 # Declarations directory
 /declarations/
