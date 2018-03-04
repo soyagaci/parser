@@ -6,7 +6,7 @@ describe('PDFParser Spec', () => {
     const fs = require('fs');
     const path = require('path');
     const PDFParser = require('../dist/pdf').default;
-    const soyPDFData = new Uint8Array(fs.readFileSync(path.join(__dirname, './data/soy.pdf')));
+    const soyPDFData = new Uint8Array(fs.readFileSync(path.join(__dirname, './data/pdf/anon.pdf')));
 
     it('should return an empty array', async () => {
         const result = await PDFParser(soyPDFData);
