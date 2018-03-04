@@ -1,5 +1,5 @@
-import {Gender, AncestorRecord, PersonRecord, DeathStatus} from "./Models";
-import { parseTurkishDate } from "./Utils";
+import {Gender, AncestorRecord, PersonRecord, DeathStatus} from "./models";
+import { parseTurkishDate } from "./utils";
 
 // definition of each header columns for html/pdf/text tables.
 export enum HeaderColumn{

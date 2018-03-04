@@ -1,4 +1,4 @@
-import {HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult} from "./RecordParse";
+import {HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult} from "./generic";
 
 function parseText(buffer: Buffer): RecordParseResult {
     const str: string = buffer.toString();

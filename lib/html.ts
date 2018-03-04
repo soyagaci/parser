@@ -2,7 +2,7 @@ let createElement: (str: string) => HTMLElement;
 import {
     HeaderColumn, HeaderColumnIndexPair, findHeaderColumn, parseRecords,
     RecordParseResult
-} from './RecordParse';
+} from './generic';
 
 // try to require dom if we are not running inside browser
 if(typeof window === 'undefined'){

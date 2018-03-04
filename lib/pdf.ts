@@ -1,7 +1,7 @@
 import {
     findHeaderColumn, HeaderColumn, HeaderColumnIndexPair, mergeRecordParseResults, parseRecords,
     RecordParseResult
-} from "./RecordParse";
+} from "./generic";
 import {PDFDocumentProxy, TextContent, TextContentItem} from "pdfjs-dist";
 
 declare var PDFJS: any;

@@ -1,3 +1,3 @@
-export { HTMLParser } from './HTMLParser';
-export { PDFParser } from './PDFParser';
-export { TextParser } from './TextParser';
+export { HTMLParser } from './html';
+export { PDFParser } from './pdf';
+export { TextParser } from './text';
