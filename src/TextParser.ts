@@ -4,39 +4,34 @@ function parseText(buffer: Buffer): object {
     const str: string = buffer.toString();
     const pattern: RegExp = /\d+\t(E|K)\t[ABK]/g;
     let results: string[][] = [];
-    let indexes: number[] = [];
-    let match: any;
-    let headerColumn = HeaderColumn;
+    let firstMatch: any;
 
-    // collect the indexes of matches
-    while((match = pattern.exec(str)) != null) {
-        indexes.push(match.index);
-    }
-    // add index of the string which indicates text's end as last index to the indexes list
-    let endIndex = str.indexOf("AÇIKLAMALAR");
-    indexes.push(endIndex);
-
-    // loop through "indexes" array and push results to the "results" array
-    for(let i: number = 0; i < indexes.length - 1; i++) {
-        let record: string[] = str.slice(indexes[i], indexes[i + 1]).split("\t");
+    // iterate through matches and add the data between them into the results array
+    while((firstMatch = pattern.exec(str)) != null) {
+        let start: number = firstMatch.index;
+        let secondMatch: any = pattern.exec(str);
+        let end: number = (secondMatch != null) ? secondMatch.index : -1;
+        pattern.lastIndex = start + firstMatch[0].length;   // take one step back
+        let record: string[] = str.slice(start, end).split("\t");
         results.push(record);
     }
 
-    let headerColumnIndexPairs: HeaderColumnIndexPair[] = [
-        [headerColumn.Order, 0],
-        [headerColumn.Gender, 1],
-        [headerColumn.Relation, 2],
-        [headerColumn.Name, 3],
-        [headerColumn.LastName, 4],
-        [headerColumn.FathersName, 5],
-        [headerColumn.MothersName, 6],
-        [headerColumn.MarriageStatus, 10],
-        [headerColumn.BirthAddress, 8],
-        [headerColumn.BirthPlaceAndDate, 7],
-        [headerColumn.DeathStatus, 11],
-        [headerColumn.CitHaneSiraNo, 9]
+    let HeaderColumnIndexPairs: HeaderColumnIndexPair[] = [
+        [HeaderColumn.Order, 0],
+        [HeaderColumn.Gender, 1],
+        [HeaderColumn.Relation, 2],
+        [HeaderColumn.Name, 3],
+        [HeaderColumn.LastName, 4],
+        [HeaderColumn.FathersName, 5],
+        [HeaderColumn.MothersName, 6],
+        [HeaderColumn.MarriageStatus, 10],
+        [HeaderColumn.BirthAddress, 8],
+        [HeaderColumn.BirthPlaceAndDate, 7],
+        [HeaderColumn.DeathStatus, 11],
+        [HeaderColumn.CitHaneSiraNo, 9]
     ];
-    return parseRecords(results, headerColumnIndexPairs);
+
+    return parseRecords(results, HeaderColumnIndexPairs);
 }
 
 
