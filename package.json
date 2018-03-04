@@ -27,7 +27,9 @@
     "url": "https://github.com/soyagaci/parser/issues"
   },
   "homepage": "https://github.com/soyagaci/parser#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@soyagaci/models": "^1.0.1"
+  },
   "devDependencies": {
     "@types/jest": "^22.1.4",
     "@types/jsdom": "^11.0.4",
