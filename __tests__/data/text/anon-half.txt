@@ -1,0 +1,21 @@
+
+ÇAMARASI MAHALLESİ	1-2-3	Dul	Ölüm
+13/01/1980
+20	E	Babasının Babası	ÜNAL	BABAOĞLU	ALİ	HATİCE	MALATYA
+25/07/1934	Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ	1-2-3	Evli	Ölüm
+15/02/2014
+21	K	Babasının Annesi	SAFİYE	BABAOĞLU	MEHMET	NAZİYE	MALATYA
+25/10/1930	Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ	1-2-3	Dul	Sağ
+-
+22	E	Annesinin Babası	FARUK	ANNEOĞLU	FIRAT	HÜSNE	RİZE
+12/12/1943	Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ	1-2-3	Evli	Ölüm
+16/11/2000
+23	K	Annesinin Annesi	ASLI	ANNEOĞLU	MUZAFFER	ŞEKER	RİZE
+1/11/1943	Rize/
+Merkez/

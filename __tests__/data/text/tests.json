@@ -6,5 +6,9 @@
   {
     "file": "./anon-table.txt",
     "expectedResult": []
+  },
+  {
+    "file": "./anon-half.txt",
+    "expectedResult": []
   }
 ]
