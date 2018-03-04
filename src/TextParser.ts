@@ -35,6 +35,8 @@ function parseText(buffer: Buffer): RecordParseResult {
 }
 
 
-export default function TextParser(buffer: Buffer): Promise<RecordParseResult> {
+export function TextParser(buffer: Buffer): Promise<RecordParseResult> {
     return Promise.resolve(parseText(buffer));
-};
+}
+
+export default TextParser;

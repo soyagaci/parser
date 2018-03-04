@@ -175,7 +175,7 @@ export async function parseSinglePage(doc: PDFDocumentProxy, pageNum: number) : 
  * @return {Promise<RecordParseResult>}
  * @constructor
  */
-export default async function PDFParser(data: Uint8Array) : Promise<RecordParseResult> {
+export async function PDFParser(data: Uint8Array) : Promise<RecordParseResult> {
     const doc = await PDFJS.getDocument(data);
     const numPages = doc.numPages;
     // for each page, run the parseSinglePage in async, wait for all of them to finish
@@ -186,4 +186,6 @@ export default async function PDFParser(data: Uint8Array) : Promise<RecordParseR
 
     // merge all page results into one.
     return results.reduce(mergeRecordParseResults, { records: [], errors: [] });
-};
+}
+
+export default PDFParser;

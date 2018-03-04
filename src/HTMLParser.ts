@@ -122,8 +122,10 @@ export function parseTableRecords(table: HTMLTableElement, headers: HeaderColumn
  * @return {Promise<RecordParseResult>}
  * @constructor
  */
-export default async function HTMLParser(htmlStr: string) : Promise<RecordParseResult> {
+export async function HTMLParser(htmlStr: string) : Promise<RecordParseResult> {
     const table = await getResultTable(htmlStr);
     const headers = parseHeaders(table);
     return parseTableRecords(table, headers);
-};
+}
+
+export default HTMLParser;
