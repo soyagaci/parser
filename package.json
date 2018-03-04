@@ -1,8 +1,9 @@
 {
   "name": "@soyagaci/parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "E-Devlet soy ağacını text, pdf ve html'den parse edebilen kütüphane.",
   "main": "format/index.js",
+  "types": "format/index.d.ts",
   "scripts": {
     "test": "jest",
     "build": "tsc",
@@ -28,7 +29,7 @@
   },
   "homepage": "https://github.com/soyagaci/parser#readme",
   "dependencies": {
-    "@soyagaci/models": "^1.0.1"
+    "@soyagaci/models": "^1.0.2"
   },
   "devDependencies": {
     "@types/jest": "^22.1.4",
