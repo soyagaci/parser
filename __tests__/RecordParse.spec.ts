@@ -1,7 +1,7 @@
+import { DeathStatus } from '@soyagaci/models';
 import {
     parseBirthAddress, parseBirthPlaceAndDate, parseCiltHaneSiraNo, parseDeathStatus, trimSpacesAndDash,
 } from '../lib/generic';
-import { DeathStatus } from '../lib/models';
 
 describe('RecordParse spec', () => {
 

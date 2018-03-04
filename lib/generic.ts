@@ -1,4 +1,4 @@
-import { AncestorRecord, DeathStatus, Gender, PersonRecord } from './models';
+import { AncestorRecord, DeathStatus, Gender, PersonRecord } from '@soyagaci/models';
 import { parseTurkishDate } from './utils';
 
 // definition of each header columns for html/pdf/text tables.
