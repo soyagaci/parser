@@ -2,11 +2,11 @@
   "name": "soyagaci-parser",
   "version": "1.0.0",
   "description": "E-Devlet soy ağacını text, pdf ve html'den parse edebilen kütüphane.",
-  "main": "dist/html.js",
+  "main": "format/index.js",
   "scripts": {
     "test": "jest",
-    "build": "webpack",
-    "watch": "npm run build -- --watch"
+    "build": "tsc",
+    "build:web": "webpack"
   },
   "repository": {
     "type": "git",

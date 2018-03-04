@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
   output: {
     filename: '[name].js',
-    library: 'soyagaci-parser',
-    libraryTarget: 'commonjs2',
+    library: 'soyagaciParser',
+    libraryTarget: 'var',
     path: path.join(__dirname, 'webBuild'), // where to place webpack files
   },
   entry: {
@@ -21,12 +21,12 @@ module.exports = {
       test: /\.ts$/,
       use: [
         {
-          loader: 'ts-loader',
+          loader: 'ts-loader?configFile=web.tsconfig.json',
         }
       ]
     }],
   },
-  target: 'node',
+  target: 'web',
   externals: {
     'pdfjs-dist': 'pdfjs-dist',
     'jsdom': 'jsdom',
