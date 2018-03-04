@@ -4,24 +4,32 @@ import {
     RecordParseResult
 } from './generic';
 
-// try to require dom if we are not running inside browser
-if(typeof window === 'undefined'){
-    const { JSDOM } = require('jsdom');
+function initCreateElementFunction() {
+    // try to require dom if we are not running inside browser
+    if (typeof window === 'undefined') {
+        const {JSDOM} = require('jsdom');
 
-    // create element with the jsdom library
-    createElement = function(str: string){
-        const dom = new JSDOM(str);
+        // create element with the jsdom library
+        createElement = function (str: string) {
+            const dom = new JSDOM(str);
 
-        return dom.window.document;
-    };
-}else{
-    // create element with the browser dom
-    createElement = function(str: string){
-        const elem = document.createElement( 'html' );
-        elem.innerHTML = str;
+            return dom.window.document;
+        };
+    } else {
+        // create element with the browser dom
+        createElement = function (str: string) {
+            const elem = document.createElement('html');
+            elem.innerHTML = str;
 
-        return elem;
-    };
+            return elem;
+        };
+    }
+}
+
+// lazily initialize and get createElement function.
+function getCreateElementFunction(){
+    if(!createElement) initCreateElementFunction();
+    return createElement;
 }
 
 /**
@@ -31,7 +39,7 @@ if(typeof window === 'undefined'){
  */
 export function getResultTable(htmlStr: string) : Promise<HTMLTableElement> {
     return new Promise((resolve, reject) => {
-        const dom = createElement(htmlStr);
+        const dom = getCreateElementFunction()(htmlStr);
         const table = dom.querySelector('.resultTable');
 
         if(table)

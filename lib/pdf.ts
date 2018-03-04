@@ -6,8 +6,17 @@ import {PDFDocumentProxy, TextContent, TextContentItem} from "pdfjs-dist";
 
 declare var PDFJS: any;
 
-// Try to require PDFJS if its not globally defined.
-if(typeof PDFJS === 'undefined') PDFJS = require('pdfjs-dist');
+function initPDFJS(){
+    // Try to require PDFJS if its not globally defined.
+    PDFJS = require('pdfjs-dist');
+}
+
+// lazily initialize and get pdfjs
+function getPDFJS() {
+    // init pdfjs if its not defined
+    if (typeof PDFJS === 'undefined') initPDFJS();
+    return PDFJS;
+}
 
 // A structure to hold where each of the table header texts start and finish, and which column they belong to.
 class ColumnWidth{
@@ -176,7 +185,7 @@ export async function parseSinglePage(doc: PDFDocumentProxy, pageNum: number) : 
  * @constructor
  */
 export async function PDFParser(data: Uint8Array) : Promise<RecordParseResult> {
-    const doc = await PDFJS.getDocument(data);
+    const doc = await getPDFJS().getDocument(data);
     const numPages = doc.numPages;
     // for each page, run the parseSinglePage in async, wait for all of them to finish
     const results = await Promise.all(
