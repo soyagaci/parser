@@ -1,0 +1,137 @@
+T.C.
+İÇİŞLERİ BAKANLIĞI
+NÜFUS VE VATANDAŞLIK İŞLERİ GENEL MÜDÜRLÜĞÜ
+ALT ÜST SOY BELGESİ
+Sıra   C   Yakınlık Derecesi Adı    Soyadı Baba Adı   Ana Adı    Doğum Yeri ve Tarihi   İl-İlçe-Mahalle/Köy Cilt-Hane-Birey Sıra No    Medeni Hali Durumu
+1   K   Annesinin Annesinin Babasının Babasının Annesi  TANSU   -   DURSUN  NAZİYE RİZE
+05/02/1844  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Dul Ölüm
+11/04/1905
+2   E   Annesinin Babasının Annesinin Babası MAHMUT  -   OSMAN   FATMA   RİZE
+15/04/1840  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+27/10/1924
+3   E   Annesinin Annesinin Annesinin Babasının Babası   HAMZA   -   TEMEL   ZARİFE RİZE
+14/06/1866  Rize
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+13/03/1913
+4   E   Annesinin Babasının Babasının Babası   DAVUT   -   MELİH  ESMA    RİZE
+04/01/1863  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+13/12/1915
+5   E   Babasının Babasının Babasının Babası MURAT   -   OZAN    AYŞE   MALATYA
+01/07/1861  Denizli/
+Sarayköy/
+TAŞMIŞ MAHALLESİ 1-19-1  Evli    Ölüm
+12/01/1935
+6   K   Annesinin Babasının Babasının Annesi    SABİHA ANNEOĞLU   AYDIN   HÜLYA  RİZE
+21/01/1873  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  13-2-6  Dul Ölüm
+20/05/1941
+7   K   Annesinin Annesinin Annesinin Babasının Annesi    KADRİYE    İLK    FETTAH  NECMİYE    RİZE
+20/08/1873  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Dul Ölüm
+01/01/1964
+8   K   Annesinin Annesinin Babasının Annesi  KADI    -   BERAT   SILA    RİZE
+07/02/1871  Rize/
+Merkez/
+TAŞKÖPRÜ MAHALLESİ  1-2-3   Evli    Ölüm
+30/11/1924
+9   K   Annesinin Babasının Annesinin Annesi  SERVİ  -   İBRAHİM   HÜSNE  RİZE
+05/02/1872  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+28/10/1922
+10  E   Annesinin Annesinin Babasının Babası KAMİL  -   ARİF   TANSU   RİZE
+09/02/1878  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+-
+11  E   Babasının Babasının Babası ALİ    -   MURAT   SENA    MALATYA
+01/02/1891  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Evli    Ölüm
+03/08/1937
+12  E   Annesinin Annesinin Annesinin Babası   ALİCAN -   HAMZA   KADRİYE    RİZE
+01/07/1888  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Bekâr  Ölüm
+22/02/1915
+13  E   Babasının Annesinin Babası   MEHMET  BABAGİL    KEMAL   GÜLİZAR   MALATYA
+06/08/1888  Malatya/
+Merkez/
+TAŞMIŞ MAHALLESİ 1-2-3   Evli    Ölüm
+24/09/1933
+14  K   Babasının Annesinin Annesi    NAZİYE -   OSMAN   GÜLLÜ MALATYA
+30/09/1897  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Dul Ölüm
+22/06/1989
+15  E   Annesinin Annesinin Babası MUZAFFER    ANNEGİLLER KAMİL  KADI    RİZE
+08/05/1899  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+25/08/1987
+16  K   Babasının Babasının Annesi  HATİCE BABAOĞLU   İSMAİL    FERİDE MALATYA
+02/01/1900  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Dul Ölüm
+18/10/1981
+17  K   Annesinin Annesinin Annesi  ŞEKER  ANNEGİLLER ALİCAN GÜLSÜM    RİZE
+19/09/1903  Samsun/
+Terme/
+SAKARLI MAHALLESİ  1-2-3   Dul Ölüm
+15/05/1990
+18  E   Annesinin Babasının Babası   FIRAT   ANNEOĞLU   DAVUT   SABİHA RİZE
+18/08/1913  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+15/03/1952
+19  K   Annesinin Babasının Annesi    HÜSNE  ANNEOĞLU   MAHMUT  SERVİ  RİZE
+04/12/1912  Ordu/
+Perşembe/
+ÇAMARASI MAHALLESİ    1-2-3   Dul Ölüm
+13/01/1980
+20  E   Babasının Babası ÜNAL   BABAOĞLU   ALİ    HATİCE MALATYA
+25/07/1934  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Evli    Ölüm
+15/02/2014
+21  K   Babasının Annesi  SAFİYE BABAOĞLU   MEHMET  NAZİYE MALATYA
+25/10/1930  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Dul Sağ
+-
+22  E   Annesinin Babası   FARUK   ANNEOĞLU   FIRAT   HÜSNE  RİZE
+12/12/1943  Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Evli    Ölüm
+16/11/2000
+23  K   Annesinin Annesi    ASLI    ANNEOĞLU   MUZAFFER    ŞEKER  RİZE
+1/11/1943   Rize/
+Merkez/
+TAŞKÖPRÜ KÖYÜ  1-2-3   Dul Sağ
+-
+24  E   Babası MAZLUM  BABAOĞLU   ÜNAL   SAFİYE MALATYA
+21/04/1969  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Evli    Sağ
+-
+25  K   Annesi  MÜNİRE    BABAOĞLU   FARUK   ASLI    RİZE
+10/02/1975  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Evli    Sağ
+-
+26  E   Kendisi MAZLUMCAN   BABAOĞLU   MAZLUM  MÜNİRE    BAKIRKÖY
+20/12/1996  Malatya/
+Pütürge/
+TAŞMIŞ MAHALLESİ 1-2-3   Bekâr  Sağ
+-
+AÇIKLAMALAR
+1-) İŞBU BELGE turkiye.gov.tr ADRESİNDEN 02.03.2018 TARİHİNDE BİLGİLENDİRME AMACIYLA OLUŞTURULMUŞTUR. HERHANGİ BİR RESMİ İŞLEMDE KULLANILAMAZ.

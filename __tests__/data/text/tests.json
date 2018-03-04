@@ -1,0 +1,10 @@
+[
+  {
+    "file": "./anon-full.txt",
+    "expectedResult": []
+  },
+  {
+    "file": "./anon-table.txt",
+    "expectedResult": []
+  }
+]
