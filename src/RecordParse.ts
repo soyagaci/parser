@@ -125,7 +125,7 @@ export function parseBirthPlaceAndDate(str: string) : [string, Date] {
 export function parseDeathStatus(str: string) : [DeathStatus, Date] {
     if(!str || str.constructor != String) throw new Error('invalid input as death status');
     const split = str.split('\n');
-    if(split.length != 2) return undefined;
+    if(split.length < 2) throw new Error('not enough lines to parse death status');
     if(split[0].trim() != 'Ölüm') return [ DeathStatus.Alive, undefined ];
     let date = parseTurkishDate(split[1].trim());
 
@@ -263,7 +263,7 @@ export function parseRecords(rows: string[][], headers: HeaderColumnIndexPair[])
     // for each row, try to parse it
     return rows.reduce((acc, cells) => {
         // Invalid cell length for the row.
-        if(cells.length !== headers.length){
+        if(cells.length < headers.length){
             acc.errors.push([ new Error('invalid cell length for row, compared to headers.'), cells ]);
             return acc;
         }

@@ -1,17 +1,17 @@
-import {HeaderColumn, HeaderColumnIndexPair, parseRecords} from "./RecordParse";
+import {HeaderColumn, HeaderColumnIndexPair, parseRecords, RecordParseResult} from "./RecordParse";
 
-function parseText(buffer: Buffer): object {
+function parseText(buffer: Buffer): RecordParseResult {
     const str: string = buffer.toString();
     const pattern: RegExp = /\d+\t(E|K)\t[ABK]/g;
     let results: string[][] = [];
-    let firstMatch: any;
+    let currentMatch = pattern.exec(str);
 
     // iterate through matches and add the data between them into the results array
-    while((firstMatch = pattern.exec(str)) != null) {
-        let start: number = firstMatch.index;
-        let secondMatch: any = pattern.exec(str);
-        let end: number = (secondMatch != null) ? secondMatch.index : -1;
-        pattern.lastIndex = start + firstMatch[0].length;   // take one step back
+    while(currentMatch != null){
+        let start: number = currentMatch.index;
+        currentMatch = pattern.exec(str);
+        let end: number = (currentMatch != null) ? currentMatch.index : -1;
+
         let record: string[] = str.slice(start, end).split("\t");
         results.push(record);
     }
@@ -35,7 +35,6 @@ function parseText(buffer: Buffer): object {
 }
 
 
-export default function TextParser(buffer: Buffer): any[] {
-    parseText(buffer);
-    return [];
+export default function TextParser(buffer: Buffer): Promise<RecordParseResult> {
+    return Promise.resolve(parseText(buffer));
 };
