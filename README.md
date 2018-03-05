@@ -30,7 +30,7 @@ Eğer PDFParser kullanırken hata alıyorsanız, node tarafında kullanıyor ise
 Eğer HTMLParser ile hata alıyorsanız, `npm install --save jsdom` yapınız.
 
 ### Standart script olarak kullanmak
-Proje'yi web uygulamalarında `<script>` tag'ı ile kullanmak mümkündür. Bunun için projenin daha önceden build edilmiş bir scriptini, veya proje'yi clonelayıp, `node run build:web` yaptıktan sonra, webBuild'deki dosyaları web projenize ekleyiniz.
+Proje'yi web uygulamalarında `<script>` tag'ı ile kullanmak mümkündür. Bunun için projenin daha önceden build edilmiş bir scriptini, veya proje'yi clonelayıp, `npm install` ve `npm run build:web` yaptıktan sonra, webBuild'deki dosyaları web projenize ekleyiniz.
 
 Releases bölümünde bu js dosyalarının build edilmiş halini bulabilirsiniz.
 
