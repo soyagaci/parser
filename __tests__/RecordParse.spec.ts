@@ -1,9 +1,26 @@
 import { DeathStatus } from '@soyagaci/models';
 import {
-    parseBirthAddress, parseBirthPlaceAndDate, parseCiltHaneSiraNo, parseDeathStatus, trimSpacesAndDash,
+    parseBirthAddress, parseBirthPlaceAndDate, parseCiltHaneSiraNo, parseDeathStatus, parseRelation, trimSpacesAndDash,
 } from '../lib/generic';
 
 describe('RecordParse spec', () => {
+
+    describe('parseRelation function', () => {
+        it('should match simple cases', () => {
+            const f = parseRelation;
+
+            expect(f('Annesinin Annesinin Annesinin Babası')).toEqual('AAAB');
+            expect(f('Babasının Annesinin Annesinin Babasının Babası')).toEqual('BAABB');
+            expect(f('Babasının Babası')).toEqual('BB');
+            expect(f('Kendisi')).toEqual('K');
+            expect(f('Oğlu')).toEqual('O');
+            expect(f('Kızı')).toEqual('P');
+            expect(f('Oğlunun Kızı')).toEqual('OP');
+        });
+
+        // It should match unknown cases
+
+    });
 
     describe('parseBirthAddress function', () => {
         it('should strip all new lines', () => {

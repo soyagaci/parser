@@ -68,16 +68,23 @@ export function parseGender(str: string): Gender {
  * mother's or father's side. For example:
  * Annesinin Annesi -> AA which essentially means relative to our user, this person is his mother's mother
  * Babasının Annessinin Babası -> BAB which means our user's Father's Mother's Father
- * the K means the record belongs to our user itself.
- * Possible values: [AB]+ or K
+ * Kızı -> P
+ * Kendisi -> Kendisi
+ * Oğlu -> O
+ * the K means the record belongs to the start of the ancestor record.
+ * Possible values: [ABOP]+ or K
  * @param {string} str
  * @return {string}
  */
 export function parseRelation(str: string): string {
     if(!str || str.constructor !== String) throw new Error('invalid input');
-    const relation = str.replace(/[^ABK]+/g, '');
+    // If the relation is to him/herself, return K
+    if(str.trim().startsWith('Kendi')) return 'K';
+    // Otherwise only get the uppercase letters.
+    const relation = str.replace(/[^ABKO]+/g, '');
     if(relation.length <= 0) throw new Error('invalid relation between user and ancestor');
-    return relation;
+    // Replace Kızı and other K's with P
+    return relation.replace(/K/g, 'P');
 }
 
 /**
